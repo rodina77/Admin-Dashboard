@@ -4,7 +4,8 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 import { IconButton, Stack } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import  { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
@@ -17,7 +18,7 @@ const Labs = () => {
   
 
   const theme = useTheme();
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
     const [labData, setLabData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -38,9 +39,9 @@ const handleDeleteLab = async (labId) => {
 
     if (response.status === 200) {
       setLabData(prevLabData => prevLabData.filter(lab => lab._id !== labId));
-      console.log('Lab deleted successfully!');
+      toast.success('Lab deleted successfully!');
     } else {
-      console.error('Something went wrong while deleting the lab');
+      toast.error('Something went wrong while deleting the lab');
     }
   } catch (error) {
     console.error('Error deleting lab:', error.message);
@@ -69,13 +70,14 @@ const filteredLabData = labData.filter(lab =>
 
 
   const columns = [
-    // {
-    //   field: "labcode",
-    //   headerName: "Lab Code",
-    //   align: "center",
-    //   headerAlign: "center",
-    //   getRowId: "id",
-    // },
+
+    {
+      field: "id",
+      headerName: "Lab ID",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "labname",
       headerName: "Lab Name",
@@ -126,31 +128,6 @@ const filteredLabData = labData.filter(lab =>
 },
 },
  ];
-
-
-
-  //  const rows = [
-  //   {
-  //     id: "1",
-  //     labcode: 1,
-  //     labname: "Al-Hayah",
-  //     location: "Benha,egypt",
-  //     phone: "555444",
-  //     email: "info@hayahdoublehelix.com",
-  //     action: "blaaa",
-  //   },
-  //   {
-  //     id: "2",
-  //     labcode: 1,
-  //     labname: "Al-Hayah",
-  //     location: "Benha,egypt",
-  //     phone: "555444",
-  //     email: "info@hayahdoublehelix.com",
-  //     action: "blaaa",
-  //   },
-    
-    
-  // ];
   
   const rows = filteredLabData.map((lab) => ({
     id: lab._id,
@@ -159,9 +136,6 @@ const filteredLabData = labData.filter(lab =>
     phone: lab.phone,
   }));
   
-
- 
-
   const getLabData = (token) => {
     axios.get('https://dna-testing-system.onrender.com/labs', {
       headers: {

@@ -10,9 +10,12 @@ import {
   useTheme,
 } from '@mui/material';
 import { Add } from '@mui/icons-material';
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const AddTech = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,16 +49,25 @@ const AddTech = () => {
         },
         body: JSON.stringify(data),
       });
-
+      const responseData = await response.json();
       if (response.ok) {
+        toast.success("A Successful New Addition!", {
+          autoClose: 3000, // Automatically close the notification after 3 seconds
+          onClose: () => {
+            navigate("/home/tech");
+          },
+        });
         setOpen(true);
         console.log('Data added successfully!');
-      } else {
-        let errorText = await response.text();
-        console.error('Failed to add data! Error:', errorText || 'Unknown error');
+      }else {
+        const errorMessage = responseData.message || "Unknown error occurred"; // Get error message from responseData or set a default message
+        console.error("Failed to add data. Status:", response.status);
+        console.error("Error message from API:", errorMessage);
+        toast.error(`Failed to add data: ${errorMessage}`);
       }
     } catch (error) {
-      console.error('Error adding data:', error);
+      console.error("Error adding data:", error);
+      toast.error("An error occurred while adding data");
     }
   };
 

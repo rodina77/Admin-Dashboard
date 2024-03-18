@@ -9,46 +9,21 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-// import React from "react";
-// import { useForm } from "react-hook-form";
 
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const UpdateLab = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm();
-
-  // const [open, setOpen] = React.useState(false);
-
-  // const handleClose = (event, reason) => {
-  //   if (reason === "clickaway") {
-  //     return;
-  //   }
-
-  //   setOpen(false);
-  // };
-
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-
-  // const onSubmit = () => {
-  //   handleClick();
-  // };
-
   const params = useParams();
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
   const token = localStorage.getItem("token");
 
   function submitForm(e) {
@@ -68,13 +43,25 @@ const UpdateLab = () => {
         }
       )
       .then((response) => {
-        console.log("Product updated successfully:", response.data);
+        console.log("lab updated successfully:", response.data);
+        toast.success("Updated Successfully!", {
+          autoClose: 3000, // Automatically close the notification after 3 seconds
+          onClose: () => {
+            navigate("/home/labs");
+          },
+        });
       })
       .catch((error) => {
-        console.error("Error updating product:", error);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          toast.error(`Failed to update: ${error.response.data.message}`);
+        } else {
+          toast.error("An error occurred while updating.");
+        }
       });
-
-    navigate("/home/labs");
   }
 
   return (
@@ -105,25 +92,11 @@ const UpdateLab = () => {
       >
         <Stack sx={{ gap: 3 }} direction={"row"}>
           <TextField
-            // error={ Boolean(errors.Labname)}
-            // // eslint-disable-next-line no-extra-boolean-cast
-            // helperText={Boolean(errors.Labname) ? "This field is required." : null}
-            // {...register("Labname", { required: true, minLength: 3 })}
             sx={{ flex: 1 }}
             label="Lab name"
             variant="filled"
             onChange={(e) => setName(e.target.value)}
           />
-
-          {/* <TextField 
-          error={ Boolean(errors.Labcode)}
-            // eslint-disable-next-line no-extra-boolean-cast
-            helperText={Boolean(errors.Labcode) ? "This field is required." : null}
-            {...register("Labcode", { required: true, minLength: 3 })}
-             sx={{ flex: 1 }}
-             label="Lab code"
-             type="number" 
-             variant="filled" /> */}
         </Stack>
 
         <TextField
@@ -150,15 +123,8 @@ const UpdateLab = () => {
           >
             Update Laboratory
           </Button>
-
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            // open={open}
-            // onClose={handleClose}
-          >
-            <Alert  severity="info" sx={{ width: "100%" }}>
-              A Successful Update 🧡!
-            </Alert>
+          <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+            <Alert severity="error" sx={{ width: "100%" }}></Alert>
           </Snackbar>
         </Box>
       </Box>

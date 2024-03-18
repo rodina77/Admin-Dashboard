@@ -4,7 +4,8 @@ import { Box, Button, Typography, useTheme } from "@mui/material";
 import { IconButton, Stack } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import  { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -146,6 +147,7 @@ const handleDeleteLab = async (techId) => {
 
     if (response.status === 200) {
       settechdata(prevTechData => prevTechData.filter(tech => tech._id !== techId));
+      toast.success('technical deleted successfully!');
       console.log('Lab deleted successfully!');
     } else {
       console.error('Something went wrong while deleting the lab');

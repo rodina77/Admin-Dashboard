@@ -15,35 +15,13 @@ import {
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const UpdateTech = () => {
   const theme = useTheme();
-
-  // const [open, setOpen] = React.useState(false);
-
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm();
-
-  // const onSubmit = () => {
-  //   handleClick()
-  // };
-
-  // const handleClose = (event, reason) => {
-  //   if (reason === 'clickaway') {
-  //     return;
-  //   }
-
-  //   setOpen(false);
-  // };
-
-  // const handleClick = () => {
-  //   setOpen(true);
-  // };
-
   const params = useParams();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUserName] = useState("");
@@ -72,10 +50,20 @@ const UpdateTech = () => {
         }
       )
       .then((response) => {
-        console.log("technical updated successfully:", response.data);
+        console.log("lab updated successfully:", response.data);
+        toast.success("Updated Successfully!", {
+          autoClose: 3000, // Automatically close the notification after 3 seconds
+          onClose: () => {
+            navigate("/home/tech");
+          },
+        });
       })
       .catch((error) => {
-        console.error("Error updating product:", error);
+        if (error.response && error.response.data && error.response.data.message) {
+          toast.error(`Failed to update: ${error.response.data.message}`);
+      } else {
+          toast.error('An error occurred while updating.');
+      }
       });
   }
 
@@ -107,10 +95,7 @@ const UpdateTech = () => {
       >
         <Stack sx={{ gap: 3 }} direction={"row"}>
           <TextField
-            // error={Boolean(errors.name)}
-            // // eslint-disable-next-line no-extra-boolean-cast
-            // helperText={Boolean(errors.name) ? "This field is required." : null}
-            // {...register("Labname", { required: true, minLength: 3 })}
+          
             sx={{ flex: 1 }}
             label="User Name"
             variant="filled"
@@ -118,12 +103,7 @@ const UpdateTech = () => {
           />
 
           <TextField
-            // error={Boolean(errors.Labid)}
-            // helperText={
-            //   // eslint-disable-next-line no-extra-boolean-cast
-            //   Boolean(errors.Labid) ? "This field is required." : null
-            // }
-            // {...register("Labid", { required: true, minLength: 3 })}
+          
             sx={{ flex: 1 }}
             label="Lab ID"
             type="text"
@@ -136,12 +116,7 @@ const UpdateTech = () => {
           <TextField
             id="field 1"
             sx={{ flex: 1 }}
-            // error={Boolean(errors.phonenumber)}
-            // helperText={
-            //   // eslint-disable-next-line no-extra-boolean-cast
-            //   Boolean(errors.phonenumber) ? "This field is required." : null
-            // }
-            // {...register("phonenumber", { required: true, minLength: 3 })}
+          
             label="Phone Number"
             type="tel"
             variant="filled"
@@ -161,12 +136,7 @@ const UpdateTech = () => {
         <TextField id="field 3" label="Password" variant="filled" type="password" onChange={e => setPassword(e.target.value)}/>
 
         <TextField
-          // error={Boolean(errors.nationalid)}
-          // helperText={
-          //   // eslint-disable-next-line no-extra-boolean-cast
-          //   Boolean(errors.nationalid) ? "This field is required." : null
-          // }
-          // {...register("nationalid", { required: true, minLength: 3 })}
+        
           label="National Id"
           type="text"
           variant="filled"
@@ -190,7 +160,7 @@ const UpdateTech = () => {
             // onClose={handleClose}
           >
             <Alert severity="info" sx={{ width: "100%" }}>
-              A Successful Update 🧡!
+              A Successful Update!
             </Alert>
           </Snackbar>
         </Box>
