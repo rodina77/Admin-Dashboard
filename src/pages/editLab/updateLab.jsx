@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 const UpdateLab = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -23,52 +24,79 @@ const UpdateLab = () => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [phone, setPhone] = useState("");
-  // const [errorMessage, setErrorMessage] = useState("");
+  const [labData, setLabData] = useState([]);
   const token = localStorage.getItem("token");
-
-  function submitForm(e) {
-    e.preventDefault();
-    axios
-      .put(
-        `https://dna-testing-system.onrender.com/updatelab/${params.id}`,
-        {
-          name: name,
-          location: location,
-          phone: phone,
-        },
-        {
+  
+  useEffect(() => {
+    const fetchLabData = async () => {
+      try {
+        const response = await axios.get('https://dna-testing-system.onrender.com/labs', {
           headers: {
-            token: token,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("lab updated successfully:", response.data);
-        toast.success("Updated Successfully!", {
-          autoClose: 3000, // Automatically close the notification after 3 seconds
-          onClose: () => {
-            navigate("/home/labs");
+            'token': token,
           },
         });
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          toast.error(`Failed to update: ${error.response.data.message}`);
+        if (response.data && Array.isArray(response.data.labs)) {
+          setLabData(response.data.labs);
         } else {
-          toast.error("An error occurred while updating.");
+          console.error('No labs array found in the response data');
         }
+      } catch (error) {
+        console.error('Error fetching lab data:', error.message);
+      }
+    };
+
+    if (!token) {
+      console.log('Token not found in storage');
+    } else {
+      fetchLabData();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const lab = labData.find(lab => lab._id === params.id);
+    if (lab) {
+      setName(lab.name);
+      setLocation(lab.location);
+      setPhone(lab.phone);
+    } else {
+      console.error('Lab with id not found');
+    }
+  }, [labData, params.id]);
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    axios.put(
+      `https://dna-testing-system.onrender.com/updatelab/${params.id}`,
+      {
+        name: name,
+        location: location,
+        phone: phone,
+      },
+      {
+        headers: {
+          token: token,
+        },
+      }
+    ).then((response) => {
+      console.log('Lab updated successfully:', response.data);
+      toast.success('Updated Successfully!', {
+        autoClose: 3000,
+        onClose: () => navigate('/home/labs'),
       });
-  }
+    }).catch((error) => {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(`Failed to update: ${error.response.data.message}`);
+      } else {
+        toast.error('An error occurred while updating.');
+      }
+    });
+  };
 
   return (
     <div>
       <Typography
         sx={{
-          fontFamily: "bold",
+          fontWeight: "bold",
           fontSize: 30,
           mb: 3,
           mt: 1,
@@ -95,6 +123,7 @@ const UpdateLab = () => {
             sx={{ flex: 1 }}
             label="Lab name"
             variant="filled"
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </Stack>
@@ -104,13 +133,15 @@ const UpdateLab = () => {
           label="Phone"
           type="number"
           variant="filled"
+          value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-        {/* <TextField id="filled-basic" label="E-mail" type="email" variant="filled" /> */}
+
         <TextField
           id="filled-basic"
           label="Location"
           variant="filled"
+          value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
 

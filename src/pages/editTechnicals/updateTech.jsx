@@ -13,7 +13,7 @@ import {
 // import { useForm } from "react-hook-form";
 
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,7 +28,46 @@ const UpdateTech = () => {
   const [phone, setPhone] = useState("");
   const [nationalId, setNationalId] = useState("");
   const [lab_id, setLab_id] = useState("");
+  const [labData, setLabData] = useState([]);
   const token = localStorage.getItem("token");
+  useEffect(() => {
+    const fetchLabData = async () => {
+      try {
+        const response = await axios.get('https://dna-testing-system.onrender.com/getTechnicals', {
+          headers: {
+            'token': token,
+          },
+        });
+        if (response.data && Array.isArray(response.data.technicals)) {
+          setLabData(response.data.technicals);
+        } else {
+          console.error('No labs array found in the response data');
+        }
+      } catch (error) {
+        console.error('Error fetching lab data:', error.message);
+      }
+    };
+
+    if (!token) {
+      console.log('Token not found in storage');
+    } else {
+      fetchLabData();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const lab = labData.find(lab => lab._id === params.id);
+    if (lab) {
+      setEmail(lab.email);
+      setPassword(lab.password);
+      setUserName(lab.username);
+      setNationalId(lab.nationalId);
+      setPhone(lab.phone);
+      setLab_id(lab.lab_id);
+    } else {
+      console.error('Lab with id not found');
+    }
+  }, [labData, params.id]);
 
   function submitForm(e) {
     e.preventDefault();
@@ -99,6 +138,7 @@ const UpdateTech = () => {
             sx={{ flex: 1 }}
             label="User Name"
             variant="filled"
+            value={username}
             onChange={e => setUserName(e.target.value)}
           />
 
@@ -108,6 +148,7 @@ const UpdateTech = () => {
             label="Lab ID"
             type="text"
             variant="filled"
+            value={lab_id}
             onChange={e => setLab_id(e.target.value)}
           />
         </Stack>
@@ -120,6 +161,7 @@ const UpdateTech = () => {
             label="Phone Number"
             type="tel"
             variant="filled"
+            value={phone}
             onChange={e => setPhone(e.target.value)}
           />
 
@@ -129,17 +171,19 @@ const UpdateTech = () => {
             label="E-mail"
             type="email"
             variant="filled"
+            value={email}
              onChange={e => setEmail(e.target.value)}
           />
         </Stack>
 
-        <TextField id="field 3" label="Password" variant="filled" type="password" onChange={e => setPassword(e.target.value)}/>
+        <TextField id="field 3" label="Password" variant="filled" type="password" value={password} onChange={e => setPassword(e.target.value)}/>
 
         <TextField
         
           label="National Id"
           type="text"
           variant="filled"
+          value={nationalId}
           onChange={e => setNationalId(e.target.value)}
         />
 
