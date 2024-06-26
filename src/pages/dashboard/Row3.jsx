@@ -1,7 +1,7 @@
 import { Paper, Stack, Typography, useTheme } from "@mui/material";
 import Pie from "../../pages/pieChart/pie";
 import Bar from "../../pages/barChart/bar";
-import Geo from "../../pages/geography/geo";
+
 
 const Row3 = () => {
   const theme = useTheme();
@@ -35,9 +35,9 @@ const Row3 = () => {
         </Typography>
         <Bar isDashboard= {true}/>
       </Paper>
-      <Paper sx={{ flexGrow:1 , minWidth:"400px", width: "33%" }}>
+      {/* <Paper sx={{ flexGrow:1 , minWidth:"400px", width: "33%" }}>
         <Geo isDashboard= {true}/>
-      </Paper>
+      </Paper> */}
 
     </Stack>
   );

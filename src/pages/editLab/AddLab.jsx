@@ -23,16 +23,13 @@ const AddLab = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem("token");
-    const apiUrl = "https://dna-testing-system.onrender.com/addlab";
-
+    const apiUrl = "https://dna-testing-system-jl95.onrender.com/addlab";
     const data = {
       location: location,
       name: name,
       phone: phone,
     };
-
     try {
       const response = await fetch(apiUrl, {
         method: "POST",

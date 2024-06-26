@@ -1,62 +1,114 @@
-import * as React from "react";
-import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import Dashboard from './pages/dashboard/Dashboard';
+import Labs from './pages/labs/Labs';
+import Technicals from './pages/technicals/Technicals';
+import Population from './pages/population/Population';
+import BarChart from './pages/barChart/BarChart';
+import PieChart from './pages/pieChart/PieChart';
+import LineChart from './pages/lineChart/LineChart';
+import Geography from './pages/geography/Geography';
+import AddLab from './pages/editLab/AddLab';
+import UpdateLab from './pages/editLab/updateLab';
+import AddTech from './pages/editTechnicals/addTech';
+import UpdateTech from './pages/editTechnicals/updateTech';
+import UpdataPopulation from './pages/editPopulaation/updataPopulation';
+import Login from './components/login';
+import MiniDrawer from "./components/mainLayout";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  return !!token;
+};
 
-import CssBaseline from "@mui/material/CssBaseline";
+function App() {
+  const navigate = useNavigate();
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-import TopBar from "./components/TopBar";
-import SideBar from "./components/SideBar";
-import { getDesignTokens } from "./components/theme";
-import { Outlet } from "react-router-dom";
+  useEffect(() => {
+    // Check if user is authenticated when the component mounts
+    const checkAuth = async () => {
+      setIsCheckingAuth(true);
+      if (!isAuthenticated()) {
+        navigate('/');
+      }
+      setIsCheckingAuth(false);
+    };
+    checkAuth();
+  }, [navigate]);
 
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-export default function MiniDrawer() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-
-  const [mode, setMode] = React.useState(
-    // eslint-disable-next-line no-extra-boolean-cast
-    Boolean(localStorage.getItem("currentMode"))
-      ? localStorage.getItem("currentMode")
-      : "light"
-  );
-  // @ts-ignore
-  const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  // Render loading state while checking authentication
+  if (isCheckingAuth) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-
-        <TopBar
-          open={open}
-          handleDrawerOpen={handleDrawerOpen}
-          setMode={setMode}
+    <>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route
+        path="/home"
+        element={isAuthenticated() ? <MiniDrawer /> : <Navigate to="/" />}
+      >
+        <Route
+          index
+          element={isAuthenticated() ? <Dashboard /> : <Navigate to="/" />}
         />
-        <SideBar open={open} handleDrawerClose={handleDrawerClose} />
-
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <DrawerHeader />
-
-          <Outlet />
-        </Box>
-      </Box>
-    </ThemeProvider>
+        <Route
+          path="labs"
+          element={isAuthenticated() ? <Labs /> : <Navigate to="/" />}
+        />
+        <Route
+          path="tech"
+          element={isAuthenticated() ? <Technicals /> : <Navigate to="/" />}
+        />
+        <Route
+          path="pop"
+          element={isAuthenticated() ? <Population /> : <Navigate to="/" />}
+        />
+        <Route
+          path="bar"
+          element={isAuthenticated() ? <BarChart /> : <Navigate to="/" />}
+        />
+        <Route
+          path="pie"
+          element={isAuthenticated() ? <PieChart /> : <Navigate to="/" />}
+        />
+        <Route
+          path="line"
+          element={isAuthenticated() ? <LineChart /> : <Navigate to="/" />}
+        />
+        <Route
+          path="geo"
+          element={isAuthenticated() ? <Geography /> : <Navigate to="/" />}
+        />
+        <Route
+          path="addlab"
+          element={isAuthenticated() ? <AddLab /> : <Navigate to="/" />}
+        />
+        <Route
+          path="updatelab/:id"
+          element={isAuthenticated() ? <UpdateLab /> : <Navigate to="/" />}
+        />
+        <Route
+          path="addtech"
+          element={isAuthenticated() ? <AddTech /> : <Navigate to="/" />}
+        />
+        <Route
+          path="updatetech/:id"
+          element={isAuthenticated() ? <UpdateTech /> : <Navigate to="/" />}
+        />
+        <Route
+          path="updatepopulation/:id"
+          element={isAuthenticated() ? <UpdataPopulation /> : <Navigate to="/" />}
+        />
+      </Route>
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+    <ToastContainer />
+    </>
   );
 }
+
+export default App;

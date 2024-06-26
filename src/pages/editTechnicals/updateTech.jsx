@@ -33,7 +33,7 @@ const UpdateTech = () => {
   useEffect(() => {
     const fetchLabData = async () => {
       try {
-        const response = await axios.get('https://dna-testing-system.onrender.com/getTechnicals', {
+        const response = await axios.get('https://dna-testing-system-jl95.onrender.com/getTechnicals', {
           headers: {
             'token': token,
           },
@@ -54,26 +54,20 @@ const UpdateTech = () => {
       fetchLabData();
     }
   }, [token]);
-
   useEffect(() => {
     const lab = labData.find(lab => lab._id === params.id);
     if (lab) {
-      setEmail(lab.email);
-      setPassword(lab.password);
-      setUserName(lab.username);
-      setNationalId(lab.nationalId);
-      setPhone(lab.phone);
-      setLab_id(lab.lab_id);
+      setEmail(lab.email);setPassword(lab.password);setUserName(lab.username);
+      setNationalId(lab.nationalId);setPhone(lab.phone);setLab_id(lab.lab_id);
     } else {
       console.error('Lab with id not found');
     }
   }, [labData, params.id]);
-
   function submitForm(e) {
     e.preventDefault();
     axios
       .put(
-        `https://dna-testing-system.onrender.com/updatetechnical/${params.id}`,
+        `https://dna-testing-system-jl95.onrender.com/updatetechnical/${params.id}`,
         {
           email: email,
           password: password,
@@ -81,30 +75,22 @@ const UpdateTech = () => {
           phone: phone,
           nationalId: nationalId,
           lab_id: lab_id,
-        },
-        {
+        },{
           headers: {
             token: token,
-          },
-        }
-      )
+          },})
       .then((response) => {
         console.log("lab updated successfully:", response.data);
         toast.success("Updated Successfully!", {
           autoClose: 3000, // Automatically close the notification after 3 seconds
           onClose: () => {
             navigate("/home/tech");
-          },
-        });
-      })
+          },});  })
       .catch((error) => {
         if (error.response && error.response.data && error.response.data.message) {
           toast.error(`Failed to update: ${error.response.data.message}`);
       } else {
-          toast.error('An error occurred while updating.');
-      }
-      });
-  }
+          toast.error('An error occurred while updating.');}});}
 
   return (
     <div>
@@ -197,16 +183,9 @@ const UpdateTech = () => {
             Update Technicals
           </Button>
 
-          <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            // open={open}
-            autoHideDuration={6000}
-            // onClose={handleClose}
-          >
-            <Alert severity="info" sx={{ width: "100%" }}>
-              A Successful Update!
-            </Alert>
-          </Snackbar>
+          <Snackbar anchorOrigin={{ vertical: "top", horizontal: "right" }} autoHideDuration={6000}>
+          <Alert severity="info" sx={{ width: "100%" }}>A Successful Update!</Alert>
+        </Snackbar>
         </Box>
       </Box>
     </div>

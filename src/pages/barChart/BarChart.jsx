@@ -1,8 +1,6 @@
 import {  useTheme , Stack, Typography, } from "@mui/material";
 import Bar from "./bar";
 
-
-
 const BarChart = () => {
   // eslint-disable-next-line no-unused-vars
   const theme = useTheme();

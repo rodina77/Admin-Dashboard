@@ -1,53 +1,66 @@
-
+import { useEffect, useState } from 'react';
 import { Box, useTheme } from "@mui/material";
 import { ResponsivePie } from "@nivo/pie";
-
-
-const data = [
-    {
-      id: "Disaster",
-      label: "disaster",
-      value: 120,
-      color: "hsl(36, 70%, 50%)",
-    },
-    {
-      id: "Crime",
-      label: "crime",
-      value: 101,
-      color: "hsl(230, 70%, 50%)",
-    },
-    {
-      id: "Identification",
-      label: "identity",
-      value: 595,
-      color: "hsl(254, 70%, 50%)",
-    },
-    {
-      id: "Missing",
-      label: "missing",
-      value: 598,
-      color: "hsl(202, 70%, 50%)",
-    },
-    {
-      id: "Paternity",
-      label: "paternity",
-      value: 298,
-      color: "hsl(45, 70%, 50%)",
-    },
-  ];
-
-
+import axios from 'axios';
 
 // eslint-disable-next-line react/prop-types
 const Pie = ({isDashboard = false}) => {
     const theme = useTheme();
-
+    const [statusData, setStatusData] = useState([]);
+    const token = localStorage.getItem('token');
+    const getRandomColor = () => {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
+    useEffect(() => {
+      const fetchLabData = async () => {
+        try {
+          const response = await axios.get('https://dna-testing-system-jl95.onrender.com/api/getAllPopulation', {
+            headers: {
+              'token': token,
+            },
+          });
+          if (response.data && Array.isArray(response.data.population)) {
+            // Calculate the count of each status value
+            const statusCounts = response.data.population.reduce((acc, cur) => {
+              acc[cur.status] = (acc[cur.status] || 0) + 1;
+              return acc;
+            }, {});
+            
+            // Convert status counts to the format expected by the pie chart
+            const pieData = Object.keys(statusCounts).map(status => ({
+              id: status,
+              label: status.toLowerCase(),
+              value: statusCounts[status],
+              color: getRandomColor(), // You can define a function to generate random colors
+            }));
+            
+            // Use the pieData for the pie chart
+            setStatusData(pieData);
+          } else {
+            console.error('No population array found in the response data');
+          }
+        } catch (error) {
+          console.error('Error fetching population data:', error.message);
+        }
+      };
+    
+      if (!token) {
+        console.log('Token not found in storage');
+      } else {
+        fetchLabData();
+      }
+    }, [token]);
     return (
         <Box sx={{ height: isDashboard ? "220px" : "75vh" }}>
        
   
         <ResponsivePie
-          data={data}
+          data={statusData}
           theme={{
             text: {
               fontSize: 11,

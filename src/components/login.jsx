@@ -1,4 +1,3 @@
-
 import Avatar from "@mui/material/Avatar";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
+import axios from 'axios';
 
 // eslint-disable-next-line no-unused-vars
 function Copyright(props) {
@@ -36,12 +35,10 @@ const Login = () => {
   const [apiMessage, setApiMessage] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
   const handleLogin = async (e) => {
       e.preventDefault();
-
       try {
-          const response = await axios.post('https://dna-testing-system.onrender.com/signin', {
+          const response = await axios.post('https://dna-testing-system-jl95.onrender.com/signin', {
               email,
               password
           });
@@ -55,8 +52,8 @@ const Login = () => {
           localStorage.setItem('token', response.data.token);
           console.log('Token stored in localStorage:', response.data.token);
 
-          // Redirect to a different component
-          navigate('/home'); // Specify the route you want to redirect to after successful login
+          navigate('/home'); 
+
       } catch (error) {
           // Update the error message in state
           toast.error('Login failed. Please check your credentials.');
@@ -66,7 +63,6 @@ const Login = () => {
 }
 
 };
-
 
 
   return (
@@ -154,13 +150,7 @@ const Login = () => {
               >
                 Log In
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-              </Grid>
+            
               <Copyright sx={{ mt: 5 }} />
             </Box>
 

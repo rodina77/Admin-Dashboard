@@ -1,6 +1,6 @@
 import { Stack, useTheme } from "@mui/material";
 import Card from "./card";
-import EmailIcon from "@mui/icons-material/Email";
+import SearchIcon from '@mui/icons-material/Search';
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import FamilyRestroomIcon from "@mui/icons-material/FamilyRestroom";
@@ -20,12 +20,12 @@ const Row1 = () => {
       >
         <Card
           icon={
-            <EmailIcon
+            <SearchIcon
               sx={{ fontSize: "23px", color: theme.palette.secondary.main }}
             />
           }
-          title={"12,316"}
-          subtitle={"Emails Sent"}
+          title={"missing tests"}
+          subtitle={"person and his family"}
           increase={"+15%"}
           data={data1}
           scheme={"nivo"}
@@ -36,24 +36,11 @@ const Row1 = () => {
               sx={{ fontSize: "25px", color: theme.palette.secondary.main }}
             />
           }
-          title={"1000"}
-          subtitle={"Identify"}
+          title={"Identification test"}
+          subtitle={"data about preson"}
           increase={"+10%"}
           data={data2}
           scheme={"category10"}
-
-        />
-        <Card
-          icon={
-            <PersonAddIcon
-              sx={{ fontSize: "25px", color: theme.palette.secondary.main }}
-            />
-          }
-          title={"15,250"}
-          subtitle={"Adding new data"}
-          increase={"+30%"}
-          data={data3}
-          scheme={"accent"}
 
         />
         <Card
@@ -62,8 +49,21 @@ const Row1 = () => {
               sx={{ fontSize: "25px", color: theme.palette.secondary.main }}
             />
           }
-          title={"16,380"}
-          subtitle={"Return of the Missing"}
+          title={"Paternity test"}
+          subtitle={"child and father"}
+          increase={"+30%"}
+          data={data3}
+          scheme={"accent"}
+
+        />
+        <Card
+          icon={
+            <PersonAddIcon
+              sx={{ fontSize: "25px", color: theme.palette.secondary.main }}
+            />
+          }
+          title={"Adding new"}
+          subtitle={"collecting DNA data"}
           increase={"+40%"}
           data={data4}
           scheme={"dark2"}

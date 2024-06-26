@@ -12,11 +12,11 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import MuiAppBar from "@mui/material/AppBar";
 // import { alpha } from "@mui/material/styles";
-import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
+// import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import LightmodeOutlinedIcon from "@mui/icons-material/LightmodeOutlined";
 import DarkmodeOutlinedIcon from "@mui/icons-material/DarkmodeOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+// import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+// import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 import { FcBiotech } from "react-icons/fc";
 
@@ -181,7 +181,7 @@ const TopBar = ({ open, handleDrawerOpen, setMode }) => {
             </IconButton>
           )}
 
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <NotificationsOutlinedIcon />
           </IconButton>
 
@@ -191,7 +191,7 @@ const TopBar = ({ open, handleDrawerOpen, setMode }) => {
 
           <IconButton color="inherit">
             <SettingsOutlinedIcon />
-          </IconButton>
+          </IconButton> */}
         </Stack>
       </Toolbar>
     </AppBar>

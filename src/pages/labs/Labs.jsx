@@ -6,14 +6,9 @@ import { Add, Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import  { useEffect, useState } from 'react';
+import  { useEffect, useState  } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import { alpha } from "@mui/material/styles";
-import { InputBase, styled } from "@mui/material";
-
-
 const Labs = () => {
   
 
@@ -23,15 +18,13 @@ const Labs = () => {
     const [labData, setLabData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-};
+    
 
 const handleDeleteLab = async (labId) => {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await axios.delete(`https://dna-testing-system.onrender.com/deletelab/${labId}`, {
+    const response = await axios.delete(`https://dna-testing-system-jl95.onrender.com/deletelab/${labId}`, {
       headers: {
         'token': token
       }
@@ -60,6 +53,10 @@ useEffect(() => {
   getLabData(token);
 }, []);
 
+
+const handleSearch = (e) => {
+  setSearchTerm(e.target.value);
+};
 
 const filteredLabData = labData.filter(lab =>
   lab.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -137,7 +134,7 @@ const filteredLabData = labData.filter(lab =>
   }));
   
   const getLabData = (token) => {
-    axios.get('https://dna-testing-system.onrender.com/labs', {
+    axios.get('https://dna-testing-system-jl95.onrender.com/labs', {
       headers: {
         'token': token
       }
@@ -158,53 +155,6 @@ const filteredLabData = labData.filter(lab =>
     });
   }
 
-
-
-  
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  }));
-  
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
-    },
-  }));
-
-
-
-
-
   return (
     <Box sx={{ height: 600, width: "98%" }}>
 
@@ -219,33 +169,15 @@ const filteredLabData = labData.filter(lab =>
            
            Add Lab
          </Button>
-        
-        
-         {/* <input
+                 
+         <input
+         className="search_input"
          type="text"
-         placeholder="Search by name, phone, or location"
+         placeholder="Search"
          value={searchTerm}
-         onChange={handleSearch}/> */}
-        
-        
-        
-        <Search>
-           <SearchIconWrapper>
-             <SearchIcon />
-           </SearchIconWrapper>
-           <StyledInputBase
-         placeholder="Search by name, phone, or location"
-         inputProps={{ "aria-label": "search" }}
-         value={searchTerm}
-         onChange={handleSearch}
-        
-         />
-           
-         </Search>
-       </Stack>
+         onChange={handleSearch}/> 
 
-        
-
+        </Stack>
 
       </Box>
       <Typography

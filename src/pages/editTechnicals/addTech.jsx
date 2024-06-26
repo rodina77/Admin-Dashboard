@@ -27,19 +27,15 @@ const AddTech = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem('token');
-    const apiUrl = 'https://dna-testing-system.onrender.com/addtechnical';
-
+    const apiUrl = 'https://dna-testing-system-jl95.onrender.com/addtechnical';
     const data = {
       username: username,
       lab_id: lab_id,
       phone: phone,
       email: email,
       password: password,
-      nationalId: nationalId,
-    };
-
+      nationalId: nationalId,};
     try {
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -47,16 +43,14 @@ const AddTech = () => {
           'Content-Type': 'application/json',
           'token': token,
         },
-        body: JSON.stringify(data),
-      });
+        body: JSON.stringify(data),});
       const responseData = await response.json();
       if (response.ok) {
         toast.success("A Successful New Addition!", {
           autoClose: 3000, // Automatically close the notification after 3 seconds
           onClose: () => {
             navigate("/home/tech");
-          },
-        });
+          },});
         setOpen(true);
         console.log('Data added successfully!');
       }else {

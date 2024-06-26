@@ -30,7 +30,7 @@ const UpdateLab = () => {
   useEffect(() => {
     const fetchLabData = async () => {
       try {
-        const response = await axios.get('https://dna-testing-system.onrender.com/labs', {
+        const response = await axios.get('https://dna-testing-system-jl95.onrender.com/labs', {
           headers: {
             'token': token,
           },
@@ -66,7 +66,7 @@ const UpdateLab = () => {
   const submitForm = (e) => {
     e.preventDefault();
     axios.put(
-      `https://dna-testing-system.onrender.com/updatelab/${params.id}`,
+      `https://dna-testing-system-jl95.onrender.com/updatelab/${params.id}`,
       {
         name: name,
         location: location,

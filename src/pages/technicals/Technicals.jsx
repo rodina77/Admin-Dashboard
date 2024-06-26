@@ -10,14 +10,9 @@ import  { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-
-
-
 const Technicals = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-
-
   const columns = [
     {
       field: "id",
@@ -111,7 +106,7 @@ const Technicals = () => {
   }, []);
 
   const getTechData = (token) => {
-    axios.get('https://dna-testing-system.onrender.com/getTechnicals', {
+    axios.get('https://dna-testing-system-jl95.onrender.com/getTechnicals', {
       headers: {
         'token': token
       }
@@ -127,19 +122,19 @@ const Technicals = () => {
     setSearchTerm(e.target.value);
 };
 
-
-
 const filteredtechdata = techdata.filter(tech =>
   tech.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
   tech.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  tech.phone.includes(searchTerm)
+  tech.phone.includes(searchTerm) ||
+  tech.nationalId.includes(searchTerm) ||
+  tech.lab_id.includes(searchTerm) 
 );
 
-const handleDeleteLab = async (techId) => {
+const handleDeleteLab = async(techId) => {
   try {
     const token = localStorage.getItem('token');
 
-    const response = await axios.delete(`https://dna-testing-system.onrender.com/deletetechnical/${techId}`, {
+    const response = await axios.delete(`https://dna-testing-system-jl95.onrender.com/deletetechnical/${techId}`, {
       headers: {
         'token': token
       }
@@ -177,31 +172,23 @@ const rows = filteredtechdata.map((tech) => ({
       <Stack >
 
        <Box>
+
+       <Stack direction={"row"} justifyContent={"space-between"}>
          <Button variant="contained" endIcon={<Add />} onClick={() => navigate('/home/addtech')} >
            Add Technicals
          </Button>
 
-
          <input
         type="text"
-        placeholder="Search by email or username or phone"
+        placeholder="Search"
         value={searchTerm}
         onChange={handleSearch}
-/>
+             />
 
-
-
-
-
-
-
-
-
-
-
+             </Stack>
        </Box>
 
-        <Typography
+      <Typography
           sx={{
             fontFamily: "bold",
             fontSize: 40,
@@ -212,7 +199,8 @@ const rows = filteredtechdata.map((tech) => ({
         >
           Technicals Data
         </Typography>
-      </Stack>
+
+        </Stack>
 
       <DataGrid
         rows={rows}

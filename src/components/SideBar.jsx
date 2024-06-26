@@ -17,10 +17,10 @@ import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlinedIcon from "@mui/icons-material/PieChartOutlined";
 import TimeLineOutlinedIcon from "@mui/icons-material/TimeLineOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { grey } from "@mui/material/colors";
 import { LogoutOutlined } from "@mui/icons-material";
-
+import { useNavigate } from "react-router-dom";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -98,10 +98,12 @@ const Array4 = [
   {
     text: "Log Out",
     icon: <LogoutOutlined />,
+    handleLogout: () => {
+      localStorage.removeItem('token');
+    },
     path: "/",
   },
 ];
-
 // eslint-disable-next-line react/prop-types
 const SideBar = ({ open, handleDrawerClose }) => {
   let location = useLocation();
@@ -274,45 +276,45 @@ const SideBar = ({ open, handleDrawerClose }) => {
       <Divider />
 
       <List>
-        {Array4.map((item) => (
-          <ListItem key={item.name} disablePadding sx={{ display: "block" }}>
-            <Tooltip title={open ? null : item.text} placement="left">
-              <ListItemButton
-               onClick={() => {
-                navigate(item.path);
-              }}
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                  bgcolor:
-                    location.pathname === item.path
-                      ? theme.palette.mode === "dark"
-                        ? grey[800]
-                        : grey[300]
-                      : null,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                    color: theme.palette.error.dark,
-                  }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </Tooltip>
-          </ListItem>
-        ))}
-      </List>
-
+  {Array4.map((item) => (
+    <ListItem key={item.path} disablePadding sx={{ display: "block" }}>
+      <Tooltip title={open ? null : item.text} placement="left">
+        <ListItemButton
+          onClick={() => {
+            item.handleLogout(); // Call the handleLogout function
+            navigate(item.path);
+          }}
+          sx={{
+            minHeight: 48,
+            justifyContent: open ? "initial" : "center",
+            px: 2.5,
+            bgcolor:
+              location.pathname === item.path
+                ? theme.palette.mode === "dark"
+                  ? grey[800]
+                  : grey[300]
+                : null,
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : "auto",
+              justifyContent: "center",
+              color: theme.palette.error.dark,
+            }}
+          >
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText
+            primary={item.text}
+            sx={{ opacity: open ? 1 : 0 }}
+          />
+        </ListItemButton>
+      </Tooltip>
+    </ListItem>
+  ))}
+</List>
 
     </Drawer>
   );
